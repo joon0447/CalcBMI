@@ -1,111 +1,149 @@
+import 'package:bmicalculator/func/buttoncolor.dart';
+import 'package:bmicalculator/func/calc.dart';
+import 'package:bmicalculator/screens/result.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
-
   @override
   State<Home> createState() => _HomeState();
 }
+
+bool gender = true;
+int height = 0;
+int weight = 0;
 
 class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          centerTitle: true,
           title: const Text("BMI 계산기"),
         ),
         body: Column(
           children: [
-            Row(
-              children: [
-                const SizedBox(height: 200),
-                Container(
-                  margin: const EdgeInsets.all(20),
-                  width: MediaQuery.of(context).size.width * 0.4,
-                  height: MediaQuery.of(context).size.height * 0.1,
-                  color: Colors.blue,
-                  child: const Center(
-                    child: Text(
-                      "남자",
-                      style: TextStyle(
-                        fontSize: 28,
-                        color: Colors.white,
+            Container(
+              decoration: const BoxDecoration(
+                color: Color.fromARGB(255, 128, 239, 247),
+              ),
+              padding: const EdgeInsets.all(10),
+              margin: const EdgeInsets.only(left: 20, right: 20, bottom: 30),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Column(
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          setState(() {
+                            maleColor();
+                          });
+                        },
+                        iconSize: 60,
+                        icon: Icon(
+                          Icons.male,
+                          color: gender == true ? Colors.blue : Colors.black,
+                        ),
                       ),
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.all(20),
-                  width: MediaQuery.of(context).size.width * 0.4,
-                  height: MediaQuery.of(context).size.height * 0.1,
-                  color: Colors.blue,
-                  child: const Center(
-                    child: Text(
-                      "여자",
-                      style: TextStyle(
-                        fontSize: 28,
-                        color: Colors.white,
+                      Text(
+                        "남자",
+                        style: TextStyle(
+                          fontSize: 25,
+                          color: gender == true ? Colors.blue : Colors.black,
+                        ),
                       ),
-                    ),
+                    ],
                   ),
-                ),
-              ],
+                  const SizedBox(
+                    width: 20,
+                    height: 1,
+                  ),
+                  Column(
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          setState(() {
+                            femaleColor();
+                          });
+                        },
+                        iconSize: 60,
+                        icon: Icon(
+                          Icons.female,
+                          color: gender == false ? Colors.blue : Colors.black,
+                        ),
+                      ),
+                      Text(
+                        "여자",
+                        style: TextStyle(
+                          fontSize: 25,
+                          color: gender == false ? Colors.blue : Colors.black,
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
             ),
-            Row(
-              children: [
-                Container(
-                  margin: const EdgeInsets.all(30),
-                  child: const Text(
+            Container(
+              decoration: const BoxDecoration(
+                color: Color.fromARGB(255, 128, 239, 247),
+              ),
+              padding: const EdgeInsets.all(10),
+              margin: const EdgeInsets.only(left: 20, right: 20, bottom: 30),
+              child: Column(
+                children: [
+                  const Text(
                     "키",
-                    style: TextStyle(fontSize: 30),
+                    style: TextStyle(fontSize: 25),
                   ),
-                ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.7,
-                  height: 50,
-                  child: const TextField(
-                    decoration: InputDecoration(border: OutlineInputBorder()),
+                  Slider(
+                    value: height.toDouble(),
+                    min: 0,
+                    max: 250,
+                    divisions: 250,
+                    onChanged: (value) {
+                      setState(
+                        () {
+                          height = value.toInt();
+                        },
+                      );
+                    },
                   ),
-                )
-              ],
+                  Text("${height}cm"),
+                ],
+              ),
             ),
-            Row(
-              children: [
-                Container(
-                  margin: const EdgeInsets.all(30),
-                  child: const Text(
+            Container(
+              decoration: const BoxDecoration(
+                color: Color.fromARGB(255, 128, 239, 247),
+              ),
+              padding: const EdgeInsets.all(10),
+              margin: const EdgeInsets.only(left: 20, right: 20, bottom: 30),
+              child: Column(
+                children: [
+                  const Text(
                     "몸무게",
-                    style: TextStyle(fontSize: 30),
+                    style: TextStyle(fontSize: 25),
                   ),
-                ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.6,
-                  height: 50,
-                  child: const TextField(
-                    decoration: InputDecoration(border: OutlineInputBorder()),
+                  Slider(
+                    value: weight.toDouble(),
+                    min: 0,
+                    max: 250,
+                    divisions: 250,
+                    onChanged: (value) {
+                      setState(
+                        () {
+                          weight = value.toInt();
+                        },
+                      );
+                    },
                   ),
-                )
-              ],
-            ),
-            Row(
-              children: [
-                Container(
-                  margin: const EdgeInsets.all(30),
-                  child: const Text(
-                    "나이",
-                    style: TextStyle(fontSize: 30),
-                  ),
-                ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.6,
-                  height: 50,
-                  child: const TextField(
-                    decoration: InputDecoration(border: OutlineInputBorder()),
-                  ),
-                )
-              ],
+                  Text("${weight}kg"),
+                ],
+              ),
             ),
             Container(
               width: MediaQuery.of(context).size.width * 0.4,
@@ -113,7 +151,11 @@ class _HomeState extends State<Home> {
               color: Colors.blue,
               child: GestureDetector(
                 onTap: () {
-                  print("dsds");
+                  calc(height, weight);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const Result()),
+                  );
                 },
                 child: const Center(
                   child: Text(
